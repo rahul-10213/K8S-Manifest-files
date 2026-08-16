@@ -1,0 +1,42 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: my-network-income
+spec:
+  podSelector:
+    matchLabels:
+      app: DEV
+  policyTypes:
+    - Ingress
+    - Egress
+
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+          podSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 80
+
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: DB
+      ports:
+        - port: 3306
+
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+
+ #Kubernetes NetworkPolicy is used to control and restrict network communication between Pods and external endpoints. 
+# It works like a firewall at the Pod level and allows us to define ingress and egress rules. We use it to prevent unauthorized Pods from accessing sensitive components such as databases and to implement network-level security between application components."

@@ -1,0 +1,39 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-traffic
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /   # annotations is instruction---> When you forward this request to the backend, rewrite the path to /."
+spec:
+  ingressClassName: nginx   #Ingress-->"Who should implement my rules?"--->NGINX Ingress Controller
+  rules:
+    - http:
+        paths:
+          - path: /   # If the incoming request matches /, send it to app-service."
+            pathType: prefix
+            backend:
+              service:
+                name: app-service 
+                port:
+                  number: 80
+
+          # rewrite-target: / : When you send the request to the backend, use / as the path / rewrite-target = change the URL path before sending to the backend.
+
+# user
+# ↓
+# http://example.com/
+# ↓
+# NGINX Ingress Controller
+# ↓
+# "Which rule matches this request?"
+# ↓
+# path: /
+# ↓
+# "Okay, send it to app-service"
+# ↓
+# app-service
+# ↓
+# Pod
+# ↓
+# Application
