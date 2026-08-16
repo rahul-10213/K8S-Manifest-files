@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-state
+spec:
+  serviceName: mysqldb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: DB
+  template:
+    metadata:
+      labels:
+        app: DB
+    spec:
+      containers:
+        - name: db-cont
+          image: rahulgangula/php:dbimage
+          ports:
+            - containerPort: 3306
+
+          # Resource quota for DB
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+          #volumeMounts
+
+          volumeMounts:
+            - name: my-pvc
+              mountPath: /var/lib/mysql
+
+         # secrets integration
+          
+          envFrom:
+            - secretRef:
+                name: my-sceret
+
+        #VolumeClaim 
+  volumeClaimTemplates:
+    - metadata:
+        name: my-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
