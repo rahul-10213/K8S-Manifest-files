@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: cont1
-          image: rahulgangula/php:appimage
+          image: rahulgangula/maven:appimage
           ports:
             - containerPort: 80
 
