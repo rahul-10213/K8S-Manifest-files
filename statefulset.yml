@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: db-cont
-          image: rahulgangula/php:dbimage
+          image: rahulgangula/maven:dbimage
           ports:
             - containerPort: 3306
 
